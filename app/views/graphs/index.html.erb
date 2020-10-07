@@ -1,2 +1,38 @@
-<h1>Graphs#index</h1>
-<p>Find me in app/views/graphs/index.html.erb</p>
+<p class="mt-4">棒グラフが表示されていれば、「Chart.js」の導入はオッケーです</p>
+<canvas id="line-chart"></canvas>
+<script>
+  let lineLabel = ['1月','2月','3月','4月','5月','6月']
+  let lineData = [5,1,1,6,7,9]
+
+  const lineChartData = {
+    labels: lineLabel,
+    datasets: [{
+      label: '得点',
+      data: lineData,
+      backgroundColor: 'rgba(54,162,235, 0.2)',
+      borderColor: 'rgba(54,162,235,1)',
+      borderWidth: 1
+    }]
+  }
+
+  const lineChartOption = {
+    title: {
+      display: true,
+      text: '棒グラフ'
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    }
+  }
+
+  const lineChartContext = document.getElementById("line-chart").getContext('2d')
+  new Chart(lineChartContext, {
+    type: 'line',
+    data: lineChartData,
+    options: lineChartOption
+  })
+</script>
