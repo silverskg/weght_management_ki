@@ -1,5 +1,8 @@
 document.addEventListener('turbolinks:load', () => {
 
+  if (document.getElementById('start-calendar')) {
+  
+
     const minDate = (date1, date2) => (date1 < date2) ? date1 : date2
     const maxDate = (date1, date2) => (date1 > date2) ? date1 : date2
 
@@ -19,6 +22,7 @@ document.addEventListener('turbolinks:load', () => {
       }else{
         drawGraph(from, to)
       }
+
     }
 
     const periodCalendarOption = {
@@ -26,11 +30,33 @@ document.addEventListener('turbolinks:load', () => {
       minDate: START_DATE,
       maxDate: END_DATE,
       onChange: drawGraphForPeriod
+
     }
 
     const startCalendarFlatpickr = flatpickr('#start-calendar', periodCalendarOption)
     const endCalendarFlatpickr = flatpickr('#end-calendar', periodCalendarOption)
 
+    flatpickr('#new-calendar', {
+      disableMobile: true,
+      // 記録のある日付を選択できないようにする
+      disable: gon.recorded_dates,
+      defaultDate: 'today',
+  })
+
+    const editCalendar = document.getElementById('edit-calendar')
+    const editWeight = document.getElementById('edit-weight')
+    const inputWeight = () => {
+      let record = gon.weight_records.find((record) => record.date === editCalendar.value)
+      editWeight.value = record.weight
+    }
+
+    flatpickr('#edit-calendar', {
+      disableMobile: true,
+      enable: gon.recorded_dates,
+      noCalendar: gon.recorded_dates.length === 0,
+      onChange: inputWeight
+    })
+    
     const TODAY = convertDate(new Date())
     const A_WEEK_AGO = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate() - 6)
     const TWO_WEEK_AGO = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate() - 13) 
@@ -106,6 +132,8 @@ document.addEventListener('turbolinks:load', () => {
       endCalendarFlatpickr.setDate(to)
     }
 
+    
+
 
     document.getElementById('a-week-button').addEventListener('click', () =>{
       drawGraphToToday(A_WEEK_AGO)
@@ -125,4 +153,5 @@ document.addEventListener('turbolinks:load', () => {
   
     // グラフの初期表示
     drawGraphToToday(A_WEEK_AGO)
+  }
 })
